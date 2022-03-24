@@ -75,7 +75,7 @@ export default class CheckOutPrint extends React.Component {
 								</td>
 							</tr>
 							<tr style={{ color: 'black' }}>
-								<td colspan='3' className='border border-slate-700 p-3'>
+								<td colSpan='3' className='border border-slate-700 p-3'>
 									<p className='text-xs w-[200px]'>
 										Bill Number: <span>{this.props.BillNumber}</span>
 									</p>
