@@ -42,7 +42,6 @@ export default function CheckOut() {
 		}
 		await setTotalGST(total);
 	};
-
 	const CheckOutFunction = async () => {
 		let data = await {
 			shop_email: SHOPEMAILID,
@@ -52,10 +51,10 @@ export default function CheckOut() {
 		};
 		await UpdateBillTotal(data);
 	};
-	useEffect(async () => {
-		await BillTotal();
-		await GSTTotal();
-	}, []);
+	useEffect(() => {
+		BillTotal();
+		GSTTotal();
+	});
 	return (
 		<div className='display-flex-row-padding-3'>
 			<NavBar />
@@ -66,7 +65,6 @@ export default function CheckOut() {
 					BillNumber={BillNumber}
 					Total={Total}
 					TotalGST={TotalGST}
-					date={TodayDate}
 				/>
 				<ReactToPrint
 					trigger={() => (
