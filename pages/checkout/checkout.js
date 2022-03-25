@@ -65,6 +65,7 @@ export default function CheckOut() {
 					BillNumber={BillNumber}
 					Total={Total}
 					TotalGST={TotalGST}
+					date={TodayDate}
 				/>
 				<ReactToPrint
 					trigger={() => (

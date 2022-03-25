@@ -20,6 +20,9 @@ export default function NavBar() {
 					<Link href='/bill/bill' className='button-navbar-link'>
 						Bill
 					</Link>
+					<Link href='/report/report' className='button-navbar-link'>
+						Filter Bill
+					</Link>
 					{/* <Link href='/company/service' className='button-navbar-link'>
 						Service
 					</Link>

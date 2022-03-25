@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const HOST = 'http://localhost:8000';
+const HOST = 'https://shop-abipravi.herokuapp.com';
 
 let AUTHKEY;
 let SHOPEMAILID;
@@ -11,10 +11,10 @@ let BillNumber1;
 if (process.browser) {
 	AUTHKEY = sessionStorage.getItem('authkey')
 		? sessionStorage.getItem('authkey')
-		: '13a91363e377153d8be213ad084ba132a2bd8b44';
+		: 'de65dd09309fe2a4b9a87febc3633d6590addf77';
 	SHOPEMAILID = localStorage.getItem('email')
 		? localStorage.getItem('email')
-		: 'shop@kumar.com';
+		: 'darkparadise877@gmail.com';
 	BillNumber1 = sessionStorage.getItem('billnumber');
 }
 
@@ -180,6 +180,7 @@ const getProductDetail = async (product_id) => {
 };
 
 const CreateProductData = async (product_data) => {
+	await console.log(product_data);
 	await axios.post(`${HOST}/shop/product/${AUTHKEY}/`, product_data).then(
 		(res) => {
 			alert('Saved');
@@ -188,7 +189,6 @@ const CreateProductData = async (product_data) => {
 			alert('Error Occured While Saving');
 		},
 	);
-	window.location.href = '/company/product';
 	window.location.reload();
 };
 

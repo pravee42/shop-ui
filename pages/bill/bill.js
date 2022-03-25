@@ -124,9 +124,10 @@ export default function Bill() {
 									setBill({
 										...Bill,
 										product_qty: parseInt(e.target.value),
-										total_price:
+										total_price: Math.round(
 											parseInt(e.target.value) *
-											(parseInt(Bill.product_price) + gst),
+												(parseInt(Bill.product_price) + gst),
+										),
 										bill_number: BillNumber,
 									});
 								}}
