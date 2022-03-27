@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Toaster } from 'react-hot-toast';
 import { getProductDetail, Updateproduct, deleteProduct } from './data/config';
 
 export default function UpdateProduct({ product_id }) {
@@ -15,6 +16,7 @@ export default function UpdateProduct({ product_id }) {
 
 	return (
 		<div className='grid grid-rows-4 gap-3' position-absolute>
+			<Toaster />
 			<label className='block'>
 				<span className="after:content-['*'] after:ml-0.5 after:text-red-500 block text-sm font-medium text-slate-700">
 					Product Name

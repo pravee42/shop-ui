@@ -10,7 +10,7 @@ import {
 	Updateproduct,
 } from '../../components/data/config';
 import NavBar from '../../components/navbar';
-import Link from 'next/link';
+import { Toaster } from 'react-hot-toast';
 
 export default function Bill() {
 	const [BillNumber, setBillNumber] = useState('');
@@ -75,6 +75,7 @@ export default function Bill() {
 
 	return (
 		<div className='display-flex-row-padding-3'>
+			<Toaster />
 			<NavBar />
 			<div className='contents-body flex flex-wrap'>
 				<div className='grid grid-cols-2 gap-5 items-center'>

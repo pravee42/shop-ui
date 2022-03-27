@@ -8,6 +8,7 @@ import {
 	UpdateBillTotal,
 	TodayDate,
 } from '../../components/data/config';
+import { Toaster } from 'react-hot-toast';
 import NavBar from '../../components/navbar';
 
 export default function CheckOut() {
@@ -57,6 +58,7 @@ export default function CheckOut() {
 	});
 	return (
 		<div className='display-flex-row-padding-3'>
+			<Toaster />
 			<NavBar />
 			<div className='contents-body'>
 				<CheckOutPrint

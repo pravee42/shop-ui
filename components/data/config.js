@@ -1,6 +1,7 @@
 import axios from 'axios';
-
-const HOST = 'https://shop-abipravi.herokuapp.com';
+import toast from 'react-hot-toast';
+const HOST = 'http://localhost:8000';
+// const HOST = 'https://shop-abipravi.herokuapp.com';
 
 let AUTHKEY;
 let SHOPEMAILID;
@@ -8,13 +9,22 @@ let TodayDate = new Date().toISOString().slice(0, 10);
 console.log(TodayDate);
 let BillNumber1;
 
+// if (process.browser) {
+// 	AUTHKEY = sessionStorage.getItem('authkey')
+// 		? sessionStorage.getItem('authkey')
+// 		: 'f9261838f8e09be27c12ae8146c78eb89ff5b73c';
+// 	SHOPEMAILID = localStorage.getItem('email')
+// 		? localStorage.getItem('email')
+// 		: 'shop@kumar.com';
+// 	BillNumber1 = sessionStorage.getItem('billnumber');
+// }
 if (process.browser) {
-	AUTHKEY = sessionStorage.getItem('authkey')
-		? sessionStorage.getItem('authkey')
-		: 'de65dd09309fe2a4b9a87febc3633d6590addf77';
+	AUTHKEY = localStorage.getItem('authkey')
+		? localStorage.getItem('authkey').toString()
+		: '';
 	SHOPEMAILID = localStorage.getItem('email')
 		? localStorage.getItem('email')
-		: 'darkparadise877@gmail.com';
+		: '';
 	BillNumber1 = sessionStorage.getItem('billnumber');
 }
 
@@ -146,10 +156,10 @@ const getProducts = async () => {
 const deleteProduct = async (id) => {
 	await axios.delete(`${HOST}/shop/product/detail/${AUTHKEY}/${id}/`).then(
 		(res) => {
-			alert('Deleted');
+			toast.success('Product Deleted');
 		},
 		(err) => {
-			alert('Error Deleting');
+			toast.error('Error Deleting');
 		},
 	);
 	window.location.reload();
@@ -163,10 +173,10 @@ const Updateproduct = async (product_data) => {
 		)
 		.then(
 			(res) => {
-				alert('Updated');
+				toast.success('Updated');
 			},
 			(err) => {
-				alert('error');
+				toast.error('error');
 			},
 		);
 };
@@ -182,23 +192,26 @@ const getProductDetail = async (product_id) => {
 const CreateProductData = async (product_data) => {
 	await console.log(product_data);
 	await axios.post(`${HOST}/shop/product/${AUTHKEY}/`, product_data).then(
-		(res) => {
-			alert('Saved');
+		async (res) => {
+			await toast.success('Saved');
+			sleep(2000).then(() => {
+				window.location.reload();
+			});
 		},
-		(err) => {
-			alert('Error Occured While Saving');
+		async (err) => {
+			await toast.error('Error Occured While Saving');
 		},
 	);
-	window.location.reload();
+	// window.location.reload();
 };
 
 const CreateBill = async (Bill) => {
 	await axios.post(`${HOST}/shop/bill/${AUTHKEY}/`, Bill).then(
 		(res) => {
-			alert('Added');
+			toast.success('Added');
 		},
 		(err) => {
-			alert('Error Adding Bill');
+			toast.error('Error Adding Bill');
 		},
 	);
 	if (process.browser) {
@@ -224,13 +237,12 @@ const FilterBill = async () => {
 };
 
 const UpdateBillTotal = async (BillData) => {
-	console.log(BillData);
 	await axios.post(`${HOST}/shop/billtotal/${AUTHKEY}/`, BillData).then(
 		(res) => {
-			alert('Bill Created');
+			toast.success('Bill Created');
 		},
 		(err) => {
-			alert('Error Creating Bill');
+			toast.error('Error Creating Bill');
 		},
 	);
 };
@@ -240,8 +252,7 @@ const MonthlyProfit = async () => {
 	start.setDate(start.getDate() - 30);
 	console.log(start.toISOString().slice(0, 10));
 	let end = new Date(TodayDate);
-	const res = await axios.get(`${HOST}/shop/product/${AUTHKEY}/`);
-	const data = res.data;
+	const data = await getBillData();
 	let products = [];
 	let pid = [];
 	await data.map((uu) => {
@@ -270,7 +281,75 @@ const MonthlyProfit = async () => {
 	return sales;
 };
 
+const RegisterUser = async (UserData) => {
+	await axios.post(`${HOST}/auth/register`, UserData).then(
+		() => {
+			toast.success('User Register Successfully');
+			toast.success('login to use the app');
+			sleep(3000).then(() => {
+				window.location.reload();
+			});
+		},
+		(err) => {
+			toast.error('Error Occured');
+		},
+	);
+};
+
+function sleep(ms) {
+	return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+const LoginUser = async (UserData) => {
+	await axios.post(`${HOST}/auth/login`, UserData).then(
+		(res) => {
+			if (res.data === 'Not Logged...') {
+				toast.error('Email or Password Incorrect');
+			} else {
+				toast.success('Successfully logged in');
+				if (process.browser) {
+					localStorage.setItem('authkey', res.data.authKey);
+					localStorage.setItem('email', res.data.user);
+					sleep(3000).then(() => {
+						window.location.reload();
+					});
+				}
+			}
+		},
+		(err) => {
+			toast.error('Error Occured');
+		},
+	);
+};
+
+const TodaySales = async () => {
+	const res = await axios.get(`${HOST}/shop/billtotal/${AUTHKEY}/`);
+	const data = res.data;
+	const TodayData = await data.filter(
+		(data) => data.date === new Date().toISOString().slice(0, 10),
+	);
+	let totalSales = 0;
+	for (let i = 0; i < TodayData.length; i++) {
+		totalSales += parseInt(TodayData[i].total_ammount);
+	}
+	return totalSales;
+};
+
+const SearchBillData = async (billno) => {
+	const data = await getBillData();
+	const Bill = await data.filter((bill) => bill.bill_number.includes(billno));
+	return Bill;
+};
+
+const SearchBillTotal = async (billno) => {
+	const res = await axios.get(`${HOST}/shop/billtotal/${AUTHKEY}/`);
+	const data = res.data;
+	const Bill = await data.filter((bill) => bill.bill_number.includes(billno));
+	return Bill;
+};
+
 export {
+	TodaySales,
 	getBillData,
 	MapProductBill,
 	colorArray,
@@ -290,4 +369,9 @@ export {
 	BillNumber1,
 	UpdateBillTotal,
 	MonthlyProfit,
+	SearchBillData,
+	AUTHKEY,
+	RegisterUser,
+	LoginUser,
+	SearchBillTotal,
 };

@@ -1,6 +1,6 @@
-import react, { useState } from 'react';
+import React, { useState } from 'react';
 import { CreateProductData, SHOPEMAILID, TodayDate } from '../data/config';
-import NavBar from '../navbar';
+import { Toaster } from 'react-hot-toast';
 
 export default function CreateProduct() {
 	const [productData, setProductData] = useState({
@@ -19,6 +19,7 @@ export default function CreateProduct() {
 
 	return (
 		<div className='grid grid-rows-4 gap-3 position-relative'>
+			<Toaster />
 			<span className='after:text-red-500 block text-lg font-medium text-slate-700'>
 				Create Product
 			</span>

@@ -41,10 +41,18 @@ export default function Products() {
 								<table className='bg-white table-auto p-3 border-collapse border border-slate-500'>
 									<thead className='table-header-group bg-green-500'>
 										<tr className='table-row'>
-											<th className='border-slate-700'>Name</th>
-											<th className='border-slate-700'>Price</th>
-											<th className='border-slate-700'>Quantity</th>
-											<th className='border-slate-700'>Update</th>
+											<th className='border-slate-700'>
+												Name
+											</th>
+											<th className='border-slate-700'>
+												Price
+											</th>
+											<th className='border-slate-700'>
+												Quantity
+											</th>
+											<th className='border-slate-700'>
+												Update
+											</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -62,7 +70,11 @@ export default function Products() {
 												<td className='border border-slate-700 table-cell p-3'>
 													<button
 														className='flex items-center justify-center h-full w-full rounded bg-indigo-500 text-white hover:bg-indigo-900'
-														onClick={() => UpdateProductFunction(data.id)}>
+														onClick={() =>
+															UpdateProductFunction(
+																data.id
+															)
+														}>
 														Edit
 													</button>
 												</td>

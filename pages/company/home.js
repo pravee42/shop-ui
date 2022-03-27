@@ -4,6 +4,7 @@ import {
 	MapProductBill,
 	TotalSalesData,
 	PreviousDayData,
+	TodaySales,
 	TodayServiceData,
 } from '../../components/data/config';
 import ChartData from '../../components/ChartData';
@@ -14,6 +15,7 @@ export default function Home() {
 	const [SalesData, setSalesData] = useState('');
 	const [YesterdaySales, setYesterdaySales] = useState('');
 	const [TodayServiceData1, setTodayServiceData] = useState('');
+	const [TodaySalesTotal, setTodaySalesTotal] = useState('');
 
 	useEffect(async () => {
 		let data = await MapProductBill();
@@ -42,6 +44,11 @@ export default function Home() {
 		await setTodayServiceData(data);
 	}, []);
 
+	useEffect(async () => {
+		const data = await TodaySales();
+		await setTodaySalesTotal(data);
+	}, []);
+
 	return (
 		<div className='display-flex-row-padding-3'>
 			<NavBar />
@@ -64,65 +71,47 @@ export default function Home() {
 						Recent Bills
 					</p>
 					<ChartData PieDataLables={PieDataLables} PieDataBody={PieDataBody} />
-					<div
-						style={{
-							display: 'flex',
-							flexDirection: 'column',
-							width: '100%',
-							alignItems: 'center',
-						}}>
-						<div className='sales-service-data'>
-							<div
-								style={{
-									display: 'flex',
-									flexDirection: 'column',
-								}}>
-								<p style={{ height: 1 }}>Total Sales</p>
-								<p
-									style={{
-										backgroundColor: '#CDCCDE',
-										padding: 5,
-										borderRadius: 5,
-										textAlign: 'left',
-									}}>
-									{SalesData}
-								</p>
-							</div>
-							<div
-								style={{
-									display: 'flex',
-									flexDirection: 'column',
-								}}>
-								<p style={{ height: 1 }}>Yesterday Sales</p>
-								<p
-									style={{
-										backgroundColor: '#CDCCDE',
-										padding: 5,
-										borderRadius: 5,
-										textAlign: 'left',
-									}}>
-									{YesterdaySales}
-								</p>
-							</div>
-						</div>
-						<div>
-							<div
-								style={{
-									display: 'flex',
-									flexDirection: 'column',
-								}}>
-								<p style={{ height: 1 }}>Today Services</p>
-								<p
-									style={{
-										backgroundColor: '#CDCCDE',
-										padding: 5,
-										borderRadius: 5,
-										textAlign: 'left',
-									}}>
-									{TodayServiceData1}
-								</p>
-							</div>
-						</div>
+					<div className='grid grid-cols-2 grid-row-2 gap-5 items-center m-[10px]'>
+						<label className='block'>
+							<span className="after:content-['*'] after:ml-0.5 after:text-red-500 block text-sm font-medium text-slate-700">
+								Total Sales
+							</span>
+							<span
+								className='mt-1 px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1'
+								placeholder='Email Address'>
+								{SalesData}
+							</span>
+						</label>
+						<label className='block'>
+							<span className="after:content-['*'] after:ml-0.5 after:text-red-500 block text-sm font-medium text-slate-700">
+								Yesterday Sales Total
+							</span>
+							<span
+								className='mt-1 px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1'
+								placeholder='Email Address'>
+								{YesterdaySales}
+							</span>
+						</label>
+						<label className='block'>
+							<span className="after:content-['*'] after:ml-0.5 after:text-red-500 block text-sm font-medium text-slate-700">
+								Today Service Total
+							</span>
+							<span
+								className='mt-1 px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1'
+								placeholder='Email Address'>
+								{TodayServiceData1}
+							</span>
+						</label>
+						<label className='block'>
+							<span className="after:content-['*'] after:ml-0.5 after:text-red-500 block text-sm font-medium text-slate-700">
+								Today Sales
+							</span>
+							<span
+								className='mt-1 px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1'
+								placeholder='Email Address'>
+								{TodaySalesTotal}
+							</span>
+						</label>
 					</div>
 				</div>
 			</div>
