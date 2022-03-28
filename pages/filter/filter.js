@@ -37,7 +37,7 @@ export default function FilterBill() {
 					</button>
 				</div>
 				<div className='h-[500px] overflow-scroll'>
-					{BillNumber.length > 0 ? (
+					{BillNumber1.length > 0 ? (
 						<CheckOutPrint
 							BillData={BillData}
 							BillNumber={BillNumber1}

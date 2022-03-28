@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
 import {
 	SHOPEMAILID,
 	TodayDate,
@@ -169,11 +170,11 @@ export default function Bill() {
 								className='bg-indigo-500 p-3 w-full rounded text-white hover:bg-indigo-700 focus:shadow-lg'>
 								Add Bill
 							</button>
-							<a
+							<Link
 								href='/checkout/checkout'
 								className='bg-indigo-500 p-3 w-full rounded text-white hover:bg-indigo-700 focus:shadow-lg'>
 								✅ Check Out
-							</a>
+							</Link>
 						</div>
 					</div>
 				</div>
