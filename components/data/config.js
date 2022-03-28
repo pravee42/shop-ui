@@ -1,7 +1,7 @@
 import axios from "axios";
 import toast from "react-hot-toast";
-const HOST = "http://localhost:8000";
-// const HOST = 'https://shop-abipravi.herokuapp.com';
+// const HOST = "http://localhost:8000";
+const HOST = "https://shop-abipravi.herokuapp.com";
 
 let AUTHKEY;
 let SHOPEMAILID;
