@@ -123,43 +123,45 @@ export default function Home() {
 						</label>
 					</div>
 					<p className='text-2xl text-gery-400 m-[10px]'>Low Stock</p>
-					<div class='container flex justify-center mx-auto'>
-						<div class='flex flex-col'>
-							<div class='w-full'>
-								<div class='border-b border-gray-200 shadow'>
-									<table class='divide-y divide-gray-300 '>
-										<thead class='bg-gray-50'>
+					<div className='container flex justify-center mx-auto'>
+						<div className='flex flex-col'>
+							<div className='w-full'>
+								<div className='border-b border-gray-200 shadow'>
+									<table className='divide-y divide-gray-300 '>
+										<thead className='bg-gray-50'>
 											<tr>
-												<th class='px-6 py-2 text-2sm text-slate-700'>
+												<th className='px-6 py-2 text-2sm text-slate-700'>
 													Product
 												</th>
-												<th class='px-6 py-2 text-2sm text-slate-700'>
+												<th className='px-6 py-2 text-2sm text-slate-700'>
 													Quantity
 												</th>
-												<th class='px-6 py-2 text-2sm text-slate-700'>Price</th>
+												<th className='px-6 py-2 text-2sm text-slate-700'>
+													Price
+												</th>
 											</tr>
 										</thead>
-										<tbody class='bg-white divide-y divide-gray-300'>
+										<tbody className='bg-white divide-y divide-gray-300'>
 											{lowstock.length > 0 ? (
 												lowstock.map((stockdata) => (
-													<tr class='whitespace-nowrap'>
-														<td class='px-6 py-4 text-sm text-slate-700'>
+													<tr className='whitespace-nowrap'>
+														<td className='px-6 py-4 text-sm text-slate-700'>
 															{stockdata.product_name}
 														</td>
-														<td class='px-6 py-4'>
-															<div class='text-sm text-gray-900'>
+														<td className='px-6 py-4'>
+															<div className='text-sm text-gray-900'>
 																{stockdata.product_qty}
 															</div>
 														</td>
-														<td class='px-6 py-4'>
-															<div class='text-sm text-slate-700'>
+														<td className='px-6 py-4'>
+															<div className='text-sm text-slate-700'>
 																{stockdata.product_price}
 															</div>
 														</td>
 													</tr>
 												))
 											) : (
-												<tr class='whitespace-nowrap'></tr>
+												<tr className='whitespace-nowrap'></tr>
 											)}
 										</tbody>
 									</table>

@@ -17,6 +17,10 @@ export default function CheckOut() {
 	const [Total, setTotal] = useState(0);
 	const [TotalGST, setTotalGST] = useState(0);
 	const componentRef = useRef();
+
+	useEffect(() => {
+		window.location.reload();
+	}, []);
 	useEffect(async () => {
 		if (process.browser) {
 			await setBillNumber(sessionStorage.getItem('billnumber'));

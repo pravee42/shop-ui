@@ -37,12 +37,12 @@ export default function Products() {
 							<h1 className='text-xl subpixel-antialiased italic font-semibold tracking-wide'>
 								Products
 							</h1>
-							<div class='container flex justify-center mx-auto  laptop:w-[50vw] md:shrink-0'>
-								<div class='flex flex-col'>
-									<div class='laptop:w-full '>
-										<div class='border-b border-gray-200 shadow'>
-											<table class='divide-y divide-gray-300 tablet:w-full table-auto tablet:w-xl'>
-												<thead class='bg-gray-50'>
+							<div className='container flex justify-center mx-auto  laptop:w-[50vw] md:shrink-0'>
+								<div className='flex flex-col'>
+									<div className='laptop:w-full '>
+										<div className='border-b border-gray-200 shadow'>
+											<table className='divide-y divide-gray-300 tablet:w-full table-auto tablet:w-xl'>
+												<thead className='bg-gray-50'>
 													<tr>
 														<th className='px-6 py-2 text-2sm text-slate-700'>
 															Name
@@ -58,7 +58,7 @@ export default function Products() {
 														</th>
 													</tr>
 												</thead>
-												<tbody class='bg-white divide-y divide-gray-300'>
+												<tbody className='bg-white divide-y divide-gray-300'>
 													{Products.map((data) => (
 														<tr key={data.id} className='whitespace-nowrap'>
 															<td className='px-6 py-4 text-sm text-slate-700'>
