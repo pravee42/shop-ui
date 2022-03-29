@@ -8,6 +8,7 @@ let SHOPEMAILID;
 let TodayDate = new Date().toISOString().slice(0, 10);
 console.log(TodayDate);
 let BillNumber1;
+console.log(BillNumber1);
 
 // if (process.browser) {
 // 	AUTHKEY = sessionStorage.getItem('authkey')
@@ -233,6 +234,7 @@ const FilterBill = async () => {
   const Bill = await data.filter((bill) =>
     bill.bill_number.includes(BillNumber1)
   );
+  // await console.log(Bill);
   return Bill;
 };
 
@@ -247,10 +249,14 @@ const UpdateBillTotal = async (BillData) => {
   );
 };
 
+const getBillTotal = async () => {
+  const response = await axios.get(`${HOST}/billtotal/${AUTHKEY}`);
+  const data = await response.data;
+};
+
 const MonthlyProfit = async () => {
   var start = new Date();
   start.setDate(start.getDate() - 30);
-  console.log(start.toISOString().slice(0, 10));
   let end = new Date(TodayDate);
   const data = await getBillData();
   let products = [];
@@ -278,7 +284,6 @@ const MonthlyProfit = async () => {
       sales.push(pushData);
     }
   }
-  await console.log(sales);
   return sales;
 };
 
@@ -346,7 +351,14 @@ const SearchBillTotal = async (billno) => {
   const res = await axios.get(`${HOST}/shop/billtotal/${AUTHKEY}/`);
   const data = res.data;
   const Bill = await data.filter((bill) => bill.bill_number.includes(billno));
+  await console.log(Bill);
   return Bill;
+};
+
+const lowStock = async () => {
+  const data = await getProducts();
+  const lowStock = await data.filter((product) => product.product_qty < 5);
+  return lowStock;
 };
 
 export {
@@ -375,4 +387,5 @@ export {
   RegisterUser,
   LoginUser,
   SearchBillTotal,
+  lowStock,
 };

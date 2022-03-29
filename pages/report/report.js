@@ -10,9 +10,9 @@ export default function Reports() {
 		let data = await MonthlyProfit();
 		let labels = [];
 		let body = [];
-		await data.map((aa) => {
-			labels.push(aa.title);
-			body.push(aa.value);
+		await data.map(async (aa) => {
+			await labels.push(aa.title);
+			await body.push(aa.value);
 		});
 		await setPieDataLables(labels);
 		await setPieDataBody(body);

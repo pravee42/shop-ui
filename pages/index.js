@@ -1,8 +1,7 @@
 import Head from 'next/head';
-import Image from 'next/image';
 import NavBar from '../components/navbar';
-import ChayaTime from '../assests/download.png';
 import styles from '../styles/Home.module.css';
+import Home1 from '../components/db/db';
 import { AUTHKEY } from '../components/data/config';
 import Login from './company/login';
 
@@ -12,14 +11,13 @@ export default function Home() {
 			<Head>
 				<title>Chaya Time</title>
 				<meta name='description' content='Shop App created by Abipravi' />
-				<link rel='icon' href='/favicon.ico' />
+				<link rel='icon' href='/download.png' />
 			</Head>
-			{console.log(AUTHKEY, 'auth key')}
 			{AUTHKEY !== '' ? (
 				<div className='display-flex-row-padding-3 '>
 					<NavBar />
 					<div className='contents-body'>
-						<Image src={ChayaTime} />
+						<Home1 />
 					</div>
 				</div>
 			) : (

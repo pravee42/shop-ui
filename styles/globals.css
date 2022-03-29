@@ -77,33 +77,10 @@ body {
 }
 
 @media screen and (max-width: 500px) {
-	.nav-bar-2 {
-		flex-direction: row;
-		position: fixed;
-		background-color: #e8ebf5;
-		bottom: 0;
-		height: 35px;
-		width: 100%;
-		margin: 0;
-		display: flex;
-		border-radius: 0px;
-		box-shadow: 0 0 0px white;
-		left: 0;
-		padding: 3px;
-		text-align: center;
-		align-items: center;
-		justify-content: space-evenly;
-	}
 	.nav-bar-1 {
 		display: none;
 	}
 
-	.nav-bar-2 span {
-		margin: 10px 30px 0 0;
-	}
-	.navbar-2 span svg {
-		width: 30px;
-	}
 	.products-body-1 {
 		display: none;
 	}

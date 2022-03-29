@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import CheckOutPrint from '../../components/checkout/checkoutui';
 import NavBar from '../../components/navbar';
+import toast, { Toaster } from 'react-hot-toast';
 import { SearchBillData, SearchBillTotal } from '../../components/data/config';
 
 export default function FilterBill() {
@@ -9,18 +10,30 @@ export default function FilterBill() {
 	const [BillNumber1, setBillNumber1] = useState(0);
 	const [BillTotal, setBillTotal] = useState(0);
 	const [BillDate, setBillDate] = useState('');
-	const SearchBillFunction = async () => {
+
+	const changeState = async () => {
 		const res = await SearchBillData(BillNumber);
 		await setBillData(res);
 		const bno = await res[0].bill_number;
 		const billtotal = await SearchBillTotal(bno);
-		console.log(billtotal);
-		await setBillTotal(billtotal[0].total_ammount);
-		await setBillDate(billtotal[0].date);
-		await setBillNumber1(billtotal[0].bill_number);
+		await console.log(billtotal, 'bill total');
+		await setBillTotal(billtotal[0]?.total_ammount);
+		await setBillDate(billtotal[0]?.date);
+		await setBillNumber1(billtotal[0]?.bill_number);
+		// await setBillTotal(billtotal.total_ammount);
+		// await setBillDate(billtotal.date);
+		// await setBillNumber1(billtotal.bill_number);
+	};
+	const SearchBillFunction = async () => {
+		toast.promise(changeState(), {
+			loading: 'Loading Data.',
+			success: <b>Data loaded successfully!</b>,
+			error: <b>Failed to load data!</b>,
+		});
 	};
 	return (
 		<div className='display-flex-row-padding-3 '>
+			<Toaster />
 			<NavBar />
 			<div className='contents-body p-3 items-center'>
 				<div className='grid grid-cols-2 p-3 gap-3'>
@@ -37,7 +50,7 @@ export default function FilterBill() {
 					</button>
 				</div>
 				<div className='h-[500px] overflow-scroll'>
-					{BillNumber1.length > 0 ? (
+					{BillNumber.length > 0 ? (
 						<CheckOutPrint
 							BillData={BillData}
 							BillNumber={BillNumber1}

@@ -8,7 +8,7 @@ import {
 	UpdateBillTotal,
 	TodayDate,
 } from '../../components/data/config';
-import { Toaster } from 'react-hot-toast';
+import toast, { Toaster } from 'react-hot-toast';
 import NavBar from '../../components/navbar';
 
 export default function CheckOut() {
@@ -22,12 +22,19 @@ export default function CheckOut() {
 			await setBillNumber(sessionStorage.getItem('billnumber'));
 		}
 	}, []);
-	useEffect(async () => {
+	const setBill = async () => {
 		const BillData = await FilterBill();
 		const FilterData = await BillData.filter((data) =>
 			data.bill_number.includes(BillNumber),
 		);
 		await setBillData(FilterData);
+	};
+	useEffect(async () => {
+		toast.promise(setBill(), {
+			loading: 'Loading Data...',
+			success: <b>Data loaded successfully!</b>,
+			error: <b>Failed To Load!.</b>,
+		});
 	}, []);
 	const BillTotal = async () => {
 		let total = 0;
@@ -78,6 +85,11 @@ export default function CheckOut() {
 					onAfterPrint={CheckOutFunction}
 					content={() => componentRef.current}
 				/>
+				<button
+					className='w-[100px] bg-indigo-500 hover:bg-indigo-700 text-white rounded p-3 m-2'
+					onClick={CheckOutFunction}>
+					Check Out
+				</button>
 			</div>
 		</div>
 	);
