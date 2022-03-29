@@ -148,7 +148,7 @@ export default function Home1() {
                     <tbody className="bg-white divide-y divide-gray-300">
                       {lowstock.length > 0 ? (
                         lowstock.map((stockdata) => (
-                          <tr className="whitespace-nowrap">
+                          <tr className="whitespace-nowrap" key={stockdata.id}>
                             <td className="px-6 py-4 text-sm text-slate-700">
                               {stockdata.product_name}
                             </td>
