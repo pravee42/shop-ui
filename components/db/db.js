@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
+import NavBar from "../../components/navbar";
 import {
   MapProductBill,
   TotalSalesData,
@@ -10,7 +11,7 @@ import {
 } from "../../components/data/config";
 import ChartData from "../../components/ChartData";
 
-export default function Home1() {
+export default function Home() {
   const [PieDataLables, setPieDataLables] = useState([]);
   const [PieDataBody, setPieDataBody] = useState([]);
   const [lowstock, setLowSotck] = useState([]);
@@ -57,9 +58,10 @@ export default function Home1() {
   }, []);
 
   return (
-    <div className="display-flex-row-padding-3">
+    <div className="d-flex flex-row">
       <Toaster />
-      <div className="contents-body">
+      <NavBar />
+      <div className="container">
         <div
           style={{
             display: "flex",
@@ -68,71 +70,41 @@ export default function Home1() {
             alignItems: "center",
           }}
         >
-          <p
-            style={{
-              fontFamily: "Times New Roman",
-              fontSize: "20px",
-              fontWeight: "bold",
-              textAlign: "center",
-              color: "#004ff5",
-            }}
-          >
-            Recent Bills
-          </p>
+          <p className="text-primary h5">Recent Bills</p>
           <ChartData PieDataLables={PieDataLables} PieDataBody={PieDataBody} />
-          <div className="grid grid-cols-2 grid-row-2 gap-5 items-center m-[10px]">
-            <label className="block">
-              <span className="after:content-['*'] after:ml-0.5 after:text-red-500 block text-sm font-medium text-slate-700">
-                Total Sales
-              </span>
-              <span
-                className="mt-1 px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1"
-                placeholder="Email Address"
-              >
-                {SalesData}
-              </span>
-            </label>
-            <label className="block">
-              <span className="after:content-['*'] after:ml-0.5 after:text-red-500 block text-sm font-medium text-slate-700">
-                Yesterday Sales Total
-              </span>
-              <span
-                className="mt-1 px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1"
-                placeholder="Email Address"
-              >
-                {YesterdaySales}
-              </span>
-            </label>
-            <label className="block">
-              <span className="after:content-['*'] after:ml-0.5 after:text-red-500 block text-sm font-medium text-slate-700">
-                Today Service Total
-              </span>
-              <span
-                className="mt-1 px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1"
-                placeholder="Email Address"
-              >
-                {TodayServiceData1}
-              </span>
-            </label>
-            <label className="block">
-              <span className="after:content-['*'] after:ml-0.5 after:text-red-500 block text-sm font-medium text-slate-700">
-                Today Sales
-              </span>
-              <span
-                className="mt-1 px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1"
-                placeholder="Email Address"
-              >
-                {TodaySalesTotal}
-              </span>
-            </label>
+          <div className="align-center d-flex flex-column justify-content-center mt-4">
+            <div className="d-flex flex-row w-100 gap-4">
+              <div className="d-flex flex-row gap-2 border p-2 rounded w-100">
+                <p className="h6">Total Sales:</p>
+                <p classname="badge bg-secondary text-dark">{SalesData}</p>
+              </div>
+              <div className="d-flex flex-row gap-2 border p-2 rounded w-100">
+                <p className="h6">Yesterday Sales Total:</p>
+                <p classname="badge bg-secondary text-dark">{YesterdaySales}</p>
+              </div>
+            </div>
+            <div className="d-flex flex-row w-100 gap-4 mt-4">
+              <div className="d-flex flex-row gap-2 border p-2 rounded w-100">
+                <p className="h6">Today Service Total:</p>
+                <p classname="badge bg-secondary text-dark">
+                  {TodayServiceData1}
+                </p>
+              </div>
+              <div className="d-flex flex-row gap-2 border p-2 rounded w-100">
+                <p className="h6">Today Sales:</p>
+                <p classname="badge bg-secondary text-dark">
+                  {TodaySalesTotal}
+                </p>
+              </div>
+            </div>
           </div>
-          <p className="text-2xl text-gery-400 m-[10px]">Low Stock</p>
-          <div className="container flex justify-center mx-auto">
+          <p className="h5 text-danger mt-4">Low Stock</p>
+          <div className="d-flex flex-row justify-content-center align-center">
             <div className="flex flex-col">
               <div className="w-full">
-                <div className="border-b border-gray-200 shadow">
-                  <table className="divide-y divide-gray-300 ">
-                    <thead className="bg-gray-50">
+                <div className="border p-2">
+                  <table className="table bordered table-striped">
+                    <thead className="table-dark">
                       <tr>
                         <th className="px-6 py-2 text-2sm text-slate-700">
                           Product
@@ -165,7 +137,7 @@ export default function Home1() {
                           </tr>
                         ))
                       ) : (
-                        <tr className="whitespace-nowrap"></tr>
+                        <tr className="whitespace-nowrap">No Low Stock Data</tr>
                       )}
                     </tbody>
                   </table>

@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import {
 	SHOPEMAILID,
 	TodayDate,
 	getProducts,
 	uuidv4,
-	CreateBill,
 	FilterBill,
+	CreateBill,
 	getProductDetail,
 	Updateproduct,
 } from '../../components/data/config';
@@ -27,6 +27,24 @@ export default function Bill() {
 		total_price: 0,
 	});
 	const [products, setProducts] = useState([]);
+	const [billList, setBillList] = useState([]);
+
+	const UpdateProduct = async (selectedProduct) => {
+		await setBill({
+			...Bill,
+			product_name: selectedProduct.product_name,
+			product_id: selectedProduct.id,
+			product_price: selectedProduct.product_price,
+			product_gst: selectedProduct.product_gst,
+		});
+	};
+	const qtyRef = useRef();
+	const prodRef = useRef();
+
+	const getBillDetails = async () => {
+		setBillList([...billList, Bill]);
+		await setBill({ ...Bill, product_name: ' ', product_qty: 0 });
+	};
 
 	useEffect(async () => {
 		const data = await getProducts();
@@ -38,21 +56,12 @@ export default function Bill() {
 			data.id.toString().includes(e.target.value.toString()),
 		);
 		await UpdateProduct(productData[0]);
+		qtyRef.current && qtyRef.current.focus();
 	};
 
 	useEffect(async () => {
 		await setBillNumber(uuidv4());
 	}, []);
-
-	const UpdateProduct = async (selectedProduct) => {
-		await setBill({
-			...Bill,
-			product_name: selectedProduct.product_name,
-			product_id: selectedProduct.id,
-			product_price: selectedProduct.product_price,
-			product_gst: selectedProduct.product_gst,
-		});
-	};
 
 	const ReduceProductqty = async () => {
 		let getProduct = await getProductDetail(Bill.product_id);
@@ -64,60 +73,64 @@ export default function Bill() {
 			product_price: getProduct.product_price,
 			product_qty: getProduct.product_qty - parseInt(Bill.product_qty),
 			product_gst: getProduct.product_gst,
-			product_gst: getProduct.product_gst,
 		};
 		Updateproduct(data);
 	};
 
-	const SaveData = async () => {
+	const SaveData = async (e) => {
+		e.preventDefault();
 		await CreateBill(Bill);
 		await ReduceProductqty();
+		await getBillDetails();
+		prodRef.current && prodRef.current.focus();
 	};
 
 	return (
-		<div className='display-flex-row-padding-3'>
+		<div className='d-flex h-100'>
 			<Toaster />
 			<NavBar />
-			<div className='contents-body flex flex-wrap'>
-				<div className='grid grid-cols-2 gap-5 items-center'>
-					<div className='grid grid-rows-4 gap-3'>
-						<p className='after:ml-0.5 after:text-red-500 block text-xl font-medium text-slate-700'>
-							Bill
-						</p>
-						<label className='block'>
-							<span className="after:content-['*'] after:ml-0.5 after:text-red-500 block text-sm font-medium text-slate-700">
-								Bill Number
-							</span>
+			<div className='d-flex flex-column gap-4'>
+				<form className='d-flex align-center flex-column gap-3 p-4'>
+					<div className='form-floating  w-25'>
+						<input
+							type='text'
+							className='form-control text-danger'
+							placeholder='Bill Number'
+							onChange={(e) => {
+								setBill({ ...Bill, bill_number: e.target.value });
+							}}
+							defaultValue={BillNumber}
+						/>
+						<label for='floatingInput'>Bill Number</label>
+					</div>
+					<div className='d-flex flex-row gap-2 align-items-center justify-content-center'>
+						<div className='w-25 form-floating'>
 							<input
-								type='text'
-								className='mt-1 px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1'
-								placeholder='Bill Number'
-								value={BillNumber}
+								className='form-control'
+								list='datalistOptions'
+								defaultValue={Bill.product_name}
+								onBlur={changeProduct}
+								ref={prodRef}
+								placeholder='Search Product...'
 							/>
-						</label>
-						<label className='block'>
-							<span className="after:content-['*'] after:ml-0.5 after:text-red-500 block text-sm font-medium text-slate-700">
-								Item
-							</span>
-							<select
-								onChange={changeProduct}
-								className='mt-1 px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1'>
-								<option>Select Menu</option>
+							<datalist id='datalistOptions'>
+								<option value=' '></option>
 								{products.map((data) => (
 									<option key={data.id} value={data.id}>
 										{data.product_name}
 									</option>
 								))}
-							</select>
-						</label>
-						<label className='block'>
-							<span className="after:content-['*'] after:ml-0.5 after:text-red-500 block text-sm font-medium text-slate-700">
-								Quantity
-							</span>
+							</datalist>
+							<label for='floatingInput'>Select Product</label>
+						</div>
+						<div className='form-floating  w-25'>
 							<input
 								type='number'
-								className='mt-1 px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1'
+								className='form-control '
 								placeholder='Quantity'
+								ref={qtyRef}
+								value={Bill.product_qty}
+								onFocus={(e) => e.target.select()}
 								onChange={(e) => {
 									let gst =
 										(parseInt(Bill.product_price) *
@@ -134,49 +147,76 @@ export default function Bill() {
 									});
 								}}
 							/>
-						</label>
-						<label className='block'>
-							<span className="after:content-['*'] after:ml-0.5 after:text-red-500 block text-sm font-medium text-slate-700">
-								Ammount
-							</span>
+							<label for='floatingInput'>Quantity</label>
+						</div>
+						<div className='form-floating  w-25'>
 							<input
 								type='number'
-								className='mt-1 px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1'
+								className='form-control'
 								placeholder='Ammount'
 								onChange={(e) =>
-									setBill({ ...Bill, product_price: e.target.value })
+									setBill({
+										...Bill,
+										product_price: e.target.value,
+										total_price: Math.round(
+											parseInt(e.target.value) * parseInt(Bill.product_qty) +
+												(parseInt(Bill.product_gst) *
+													parseInt(e.target.value)) /
+													100,
+										),
+									})
 								}
 								value={Bill.product_price}
 							/>
-						</label>
-						<label className='block'>
-							<span className="after:content-['*'] after:ml-0.5 after:text-red-500 block text-sm font-medium text-slate-700">
-								Total price
-							</span>
+							<label for='floatingInput'>Ammount</label>
+						</div>
+						<div className='form-floating  w-25'>
 							<input
 								type='number'
-								className='mt-1 px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1'
+								className='form-control'
 								placeholder='total price'
 								onChange={(e) =>
 									setBill({ ...Bill, total_price: e.target.value })
 								}
 								value={Bill.total_price}
 							/>
-						</label>
+							<label for='floatingInput'>Total price</label>
+						</div>
 
-						<div className='grid grid-cols-2 gap-3'>
-							<button
-								onClick={SaveData}
-								className='bg-indigo-500 p-3 w-full rounded text-white hover:bg-indigo-700 focus:shadow-lg'>
-								Add Bill
+						<div className='d-flex flex-row gap-3'>
+							<button onClick={SaveData} className='btn btn-outline-primary'>
+								<i className='bi bi-bag-plus'></i>
 							</button>
-							<Link
-								href='/checkout/checkout'
-								className='text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 focus:ring-offset-2'>
-								Check Out
-							</Link>
 						</div>
 					</div>
+				</form>
+				<div className='d-flex w-100 flex-row align-center justify-content-center '>
+					<table className='table table-stripped table-hover table-bordered w-50'>
+						<thead className='table-dark'>
+							<tr>
+								<th>Product Name</th>
+								<th>Price</th>
+							</tr>
+						</thead>
+						<tbody>
+							{billList.map((data) => (
+								<tr>
+									<td>{data.product_name}</td>
+									<td>{data.total_price}</td>
+								</tr>
+							))}
+							<tr>
+								<td></td>
+								<td>
+									<Link href='/checkout/checkout'>
+										<button className='btn btn-outline-success'>
+											<i className='bi bi-bag-check'></i> Check Out
+										</button>
+									</Link>
+								</td>
+							</tr>
+						</tbody>
+					</table>
 				</div>
 			</div>
 		</div>

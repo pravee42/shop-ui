@@ -11,18 +11,20 @@ import {
 import toast, { Toaster } from 'react-hot-toast';
 import NavBar from '../../components/navbar';
 
+if (process.browser) {
+	var BillNumber = sessionStorage.getItem('billnumber');
+}
+
 export default function CheckOut() {
-	const [BillNumber, setBillNumber] = useState('');
 	const [BillData, setBillData] = useState([]);
 	const [Total, setTotal] = useState(0);
 	const [TotalGST, setTotalGST] = useState(0);
 	const componentRef = useRef();
 
-	useEffect(async () => {
-		if (process.browser) {
-			await setBillNumber(sessionStorage.getItem('billnumber'));
-		}
-	}, []);
+	useEffect(() => {
+		// window.location.reload();
+	}, [BillNumber]);
+
 	const setBill = async () => {
 		const BillData = await FilterBill();
 		const FilterData = await BillData.filter((data) =>
@@ -60,15 +62,16 @@ export default function CheckOut() {
 		};
 		await UpdateBillTotal(data);
 	};
-	useEffect(() => {
-		BillTotal();
-		GSTTotal();
-	});
+	useEffect(async () => {
+		await setBill();
+		await BillTotal();
+		await GSTTotal();
+	}, []);
 	return (
-		<div className='display-flex-row-padding-3'>
+		<div className='d-flex flex-row justify-content-center align-items-center'>
 			<Toaster />
 			<NavBar />
-			<div className='contents-body'>
+			<div className='container'>
 				<CheckOutPrint
 					ref={componentRef}
 					BillData={BillData}
@@ -79,17 +82,20 @@ export default function CheckOut() {
 				/>
 				<ReactToPrint
 					trigger={() => (
-						<button className='w-[100px] bg-indigo-500 hover:bg-indigo-700 text-white rounded p-3'>
-							Print Bill
-						</button>
+						<button className='btn btn-outline-danger'>Print Bill</button>
 					)}
 					onAfterPrint={CheckOutFunction}
 					content={() => componentRef.current}
 				/>
 				<button
-					className='w-[100px] bg-indigo-500 hover:bg-indigo-700 text-white rounded p-3 m-2'
+					className='btn btn-outline-danger m-2'
 					onClick={CheckOutFunction}>
 					Check Out
+				</button>
+				<button
+					className='btn btn-outline-danger m-2'
+					onClick={(_) => window.location.reload()}>
+					Refresh
 				</button>
 			</div>
 		</div>

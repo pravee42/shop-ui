@@ -32,24 +32,24 @@ export default function FilterBill() {
 		});
 	};
 	return (
-		<div className='display-flex-row-padding-3 '>
+		<div className='d-flex flex-row'>
 			<Toaster />
 			<NavBar />
-			<div className='contents-body p-3 items-center'>
-				<div className='grid grid-cols-2 p-3 gap-3'>
+			<div className='d-flex align-items-center p-3 w-100 flex-column gap-3'>
+				<div className='d-flex flex-row gap-3 p-2' style={{ height: 50 }}>
 					<input
 						type='text'
-						placeholder='Bill Number'
-						className='px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block  rounded-md sm:text-sm focus:ring-1 w-full '
+						placeholder='Enter Bill Number'
+						className='border rounded p-3 text-primary bg-light'
 						onChange={(e) => setBillNumber(e.target.value)}
 					/>
 					<button
-						className='px-3 py-2 bg-white border shadow-sm border-slate-700 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-[100px] rounded-md sm:text-sm focus:ring-1'
+						className='btn btn-outline-danger'
 						onClick={SearchBillFunction}>
 						Search
 					</button>
 				</div>
-				<div className='h-[500px] overflow-scroll'>
+				<div className='h-100 d-flex w-100 align-items-center justify-content-center'>
 					{BillNumber.length > 0 ? (
 						<CheckOutPrint
 							BillData={BillData}
@@ -58,7 +58,9 @@ export default function FilterBill() {
 							date={BillDate}
 						/>
 					) : (
-						<p className='text-xl text-[black]'>Enter Bill Number</p>
+						<p className='badge text-white p-3 bg-primary h-25 align-items-center d-flex'>
+							Enter Bill Number
+						</p>
 					)}
 				</div>
 			</div>

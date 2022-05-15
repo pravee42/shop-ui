@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { getProducts } from '../../components/data/config';
-import { FaEdit } from 'react-icons/fa';
-import { IoIosCreate } from 'react-icons/io';
-import Link from 'next/link';
 import NavBar from '../../components/navbar';
 import UpdateProduct from '../../components/updateproduct';
 import CreateProduct from './../../components/product/createproduct';
@@ -11,91 +8,90 @@ export default function Products() {
 	const [Products, setProducts] = useState([]);
 	const [updateProduct, setUpdateProduct] = useState(false);
 	const [ProductId, setProductId] = useState('');
+	const [loading, setLoading] = useState(false);
 
-	useEffect(async () => {
+	const getProd = async () => {
+		await setLoading(true);
 		const data = await getProducts();
 		await setProducts(data);
+		await setLoading(false);
+	};
+
+	useEffect(() => {
+		getProd();
 	}, []);
+
+	const handleProductUpdate = () => {
+		setUpdateProduct(!updateProduct);
+		getProd();
+	};
 
 	const UpdateProductFunction = async (id) => {
 		await setProductId(id);
-		setUpdateProduct(!updateProduct);
+		handleProductUpdate();
 	};
 
 	return (
-		<div className='display-flex-row-padding-3'>
+		<div
+			className='d-flex flex-row'
+			style={{ height: '100vh', overflow: 'hidden' }}>
 			<NavBar />
-			<div className='flex justify-center laptop:w-full flex-column p-5 gap-3 flex-wrap'>
-				{updateProduct === false && (
-					<div>
-						<CreateProduct />
-					</div>
-				)}
-				<div>
+			{loading === false ? (
+				<div className='d-flex flex-row align-center justify-content-center w-100 gap-4 m-4 p-4'>
 					{updateProduct === false && (
-						<div className='flex-row justify-around items-center text-center p-[10px] w-full'>
-							<h1 className='text-xl subpixel-antialiased italic font-semibold tracking-wide'>
-								Products
-							</h1>
-							<div className='container flex justify-center mx-auto  laptop:w-[50vw] md:shrink-0'>
-								<div className='flex flex-col'>
-									<div className='laptop:w-full '>
-										<div className='border-b border-gray-200 shadow'>
-											<table className='divide-y divide-gray-300 tablet:w-full table-auto tablet:w-xl'>
-												<thead className='bg-gray-50'>
-													<tr>
-														<th className='px-6 py-2 text-2sm text-slate-700'>
-															Name
-														</th>
-														<th className='px-6 py-2 text-2sm text-slate-700'>
-															Price
-														</th>
-														<th className='px-6 tablet:hidden py-2 text-2sm text-slate-700'>
-															Quantity
-														</th>
-														<th className='px-6 py-2 text-2sm text-slate-700'>
-															Update
-														</th>
-													</tr>
-												</thead>
-												<tbody className='bg-white divide-y divide-gray-300'>
-													{Products.map((data) => (
-														<tr key={data.id} className='whitespace-nowrap'>
-															<td className='px-6 py-4 text-sm text-slate-700'>
-																{data.product_name}
-															</td>
-															<td className='px-6 py-4 text-sm text-slate-700'>
-																{data.product_price}
-															</td>
-															<td className='px-6 py-4 text-sm text-slate-700'>
-																{data.product_qty}
-															</td>
-															<td className='px-6 py-4 text-sm text-slate-700'>
-																<button
-																	className='flex items-center justify-center h-full w-full rounded bg-indigo-500 text-white hover:bg-indigo-900'
-																	onClick={() =>
-																		UpdateProductFunction(data.id)
-																	}>
-																	Edit
-																</button>
-															</td>
-														</tr>
-													))}
-												</tbody>
-											</table>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					)}
-					{updateProduct === true && (
 						<div>
-							<UpdateProduct product_id={ProductId} />
+							<CreateProduct getreq={getProd} />
 						</div>
 					)}
+					<div style={{ height: '90vh', overflowY: 'scroll' }} className='w-50'>
+						{updateProduct === false && (
+							<div className='d-flex flex-column justify-content-center p-2 gap-3'>
+								<h1 className='text-primary h5'>Products</h1>
+								<table className='table table-stripped table-bordered'>
+									<thead className='table-dark'>
+										<tr>
+											<th className='text-white h6'>Name</th>
+											<th className='text-white h6'>Price</th>
+											<th className='text-white h6'>Quantity</th>
+											<th className='text-white h6'>Update</th>
+										</tr>
+									</thead>
+									<tbody>
+										{Products.map((data) => (
+											<tr key={data.id}>
+												<td>{data.product_name}</td>
+												<td>{data.product_price}</td>
+												<td>{data.product_qty}</td>
+												<td>
+													<button
+														className='btn btn-outline-dark'
+														onClick={() => UpdateProductFunction(data.id)}>
+														Edit
+													</button>
+												</td>
+											</tr>
+										))}
+									</tbody>
+								</table>
+							</div>
+						)}
+						{updateProduct === true && (
+							<div>
+								<UpdateProduct
+									product_id={ProductId}
+									fnc={handleProductUpdate}
+								/>
+							</div>
+						)}
+					</div>
 				</div>
-			</div>
+			) : (
+				<div className='position-absolute top-50 start-50 translate-middle'>
+					<div className='spinner-border' role='status'>
+						<span className='visually-hidden'>Loading...</span>
+					</div>
+				</div>
+			)}
 		</div>
 	);
 }

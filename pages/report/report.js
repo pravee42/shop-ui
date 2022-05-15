@@ -11,8 +11,8 @@ export default function Reports() {
 		let labels = [];
 		let body = [];
 		await data.map(async (aa) => {
-			await labels.push(aa.title);
-			await body.push(aa.value);
+			await labels.push(aa.date);
+			await body.push(aa.price);
 		});
 		await setPieDataLables(labels);
 		await setPieDataBody(body);
@@ -22,9 +22,12 @@ export default function Reports() {
 		<div className='display-flex-row-padding-3'>
 			<NavBar />
 			<div className='contents-body'>
-				<div className='flex-row items-center justify-center p-3'>
+				<div className='flex-row items-center justify-center p-3' style={{width: 'auto'}}>
 					<h3>Monthly Sales Report</h3>
 					<ChartData PieDataLables={PieDataLables} PieDataBody={PieDataBody} />
+				</div>
+				<div>
+					<h3>Filter Bill By Date</h3>
 				</div>
 			</div>
 		</div>

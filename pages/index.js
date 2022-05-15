@@ -1,30 +1,32 @@
+import React, { useState, useEffect, createContext } from 'react';
 import Head from 'next/head';
-import NavBar from '../components/navbar';
-import styles from '../styles/Home.module.css';
 import Home1 from '../components/db/db';
-import { AUTHKEY } from '../components/data/config';
 import Login from './company/login';
+import { Authcontext } from '../components/context';
 
 export default function Home() {
+	const [AUTHKEY, setAUTHKEY] = useState('');
+
+	function findAuth() {
+		if (process.browser) {
+			localStorage.getItem('authkey')
+				? setAUTHKEY(localStorage.getItem('authkey').toString())
+				: '';
+		}
+	}
+
+	useEffect(() => {
+		findAuth();
+	});
+
 	return (
-		<div className={styles.container}>
+		<Authcontext.Provider value={{ AUTHKEY, findAuth }}>
 			<Head>
 				<title>Chaya Time</title>
 				<meta name='description' content='Shop App created by Abipravi' />
 				<link rel='icon' href='/download.png' />
 			</Head>
-			{AUTHKEY !== '' ? (
-				<div className='display-flex-row-padding-3 '>
-					<NavBar />
-					<div className='contents-body'>
-						<Home1 />
-					</div>
-				</div>
-			) : (
-				<div className='display-flex-row-padding-3 '>
-					<Login />
-				</div>
-			)}
-		</div>
+			{AUTHKEY !== '' ? <Home1 /> : <Login authcheck={findAuth} />}
+		</Authcontext.Provider>
 	);
 }

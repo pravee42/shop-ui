@@ -3,12 +3,10 @@ import toast from "react-hot-toast";
 // const HOST = "http://localhost:8000";
 const HOST = "https://shop-abipravi.herokuapp.com";
 
-let AUTHKEY;
-let SHOPEMAILID;
-let TodayDate = new Date().toISOString().slice(0, 10);
-console.log(TodayDate);
-let BillNumber1;
-console.log(BillNumber1);
+var SHOPEMAILID;
+var TodayDate = new Date().toISOString().slice(0, 10);
+var BillNumber1;
+var AUTHKEY;
 
 // if (process.browser) {
 // 	AUTHKEY = sessionStorage.getItem('authkey')
@@ -19,23 +17,29 @@ console.log(BillNumber1);
 // 		: 'shop@kumar.com';
 // 	BillNumber1 = sessionStorage.getItem('billnumber');
 // }
-if (process.browser) {
-  AUTHKEY = localStorage.getItem("authkey")
-    ? localStorage.getItem("authkey").toString()
-    : "";
-  SHOPEMAILID = localStorage.getItem("email")
-    ? localStorage.getItem("email")
-    : "";
-  BillNumber1 = sessionStorage.getItem("billnumber");
+function callback() {
+  if (process.browser) {
+    AUTHKEY = localStorage.getItem("authkey")
+      ? localStorage.getItem("authkey").toString()
+      : "";
+    SHOPEMAILID = localStorage.getItem("email")
+      ? localStorage.getItem("email")
+      : "";
+    BillNumber1 = sessionStorage.getItem("billnumber");
+  }
 }
 
+callback();
+
 const getBillData = async () => {
+  callback();
   const res = await axios.get(`${HOST}/shop/bill/${AUTHKEY}/`);
   const data = res.data;
   return data;
 };
 
 const MapProductBill = async () => {
+  callback();
   const res = await axios.get(`${HOST}/shop/product/${AUTHKEY}/`);
   const data = res.data;
   let products = [];
@@ -114,6 +118,7 @@ const colorArray = [
 ];
 
 const TotalSalesData = async () => {
+  callback();
   const BillData = await getBillData();
   let totalSales = 0;
   for (let i = 0; i < BillData.length; i++) {
@@ -123,6 +128,7 @@ const TotalSalesData = async () => {
 };
 
 const PreviousDayData = async () => {
+  callback();
   var d = new Date();
   d.setDate(d.getDate() - 1);
   var dd = new Date(d).toISOString().slice(0, 10);
@@ -136,6 +142,7 @@ const PreviousDayData = async () => {
 };
 
 const TodayServiceData = async () => {
+  callback();
   const res = await axios.get(`${HOST}/shop/servicetotal/${AUTHKEY}/`);
   const data = res.data;
   const TodayData = await data.filter(
@@ -149,12 +156,14 @@ const TodayServiceData = async () => {
 };
 
 const getProducts = async () => {
+  callback();
   const res = await axios.get(`${HOST}/shop/product/${AUTHKEY}/`);
   const data = res.data;
   return data;
 };
 
-const deleteProduct = async (id) => {
+const deleteProduct = async (id, fnc) => {
+  callback();
   await axios.delete(`${HOST}/shop/product/detail/${AUTHKEY}/${id}/`).then(
     (res) => {
       toast.success("Product Deleted");
@@ -163,10 +172,11 @@ const deleteProduct = async (id) => {
       toast.error("Error Deleting");
     }
   );
-  window.location.reload();
+  fnc();
 };
 
 const Updateproduct = async (product_data) => {
+  callback();
   await axios
     .put(
       `${HOST}/shop/product/detail/${AUTHKEY}/${product_data.id}/`,
@@ -183,6 +193,7 @@ const Updateproduct = async (product_data) => {
 };
 
 const getProductDetail = async (product_id) => {
+  callback();
   const res = await axios.get(
     `${HOST}/shop/product/detail/${AUTHKEY}/${product_id}/`
   );
@@ -190,14 +201,13 @@ const getProductDetail = async (product_id) => {
   return data;
 };
 
-const CreateProductData = async (product_data) => {
+const CreateProductData = async (product_data, req) => {
+  callback();
   await console.log(product_data);
   await axios.post(`${HOST}/shop/product/${AUTHKEY}/`, product_data).then(
     async (res) => {
       await toast.success("Saved");
-      sleep(2000).then(() => {
-        window.location.reload();
-      });
+      req();
     },
     async (err) => {
       await toast.error("Error Occured While Saving");
@@ -207,6 +217,7 @@ const CreateProductData = async (product_data) => {
 };
 
 const CreateBill = async (Bill) => {
+  callback();
   await axios.post(`${HOST}/shop/bill/${AUTHKEY}/`, Bill).then(
     (res) => {
       toast.success("Added");
@@ -230,6 +241,7 @@ function uuidv4() {
 }
 
 const FilterBill = async () => {
+  callback();
   const data = await getBillData();
   const Bill = await data.filter((bill) =>
     bill.bill_number.includes(BillNumber1)
@@ -239,6 +251,7 @@ const FilterBill = async () => {
 };
 
 const UpdateBillTotal = async (BillData) => {
+  callback();
   await axios.post(`${HOST}/shop/billtotal/${AUTHKEY}/`, BillData).then(
     (res) => {
       toast.success("Bill Created");
@@ -250,11 +263,13 @@ const UpdateBillTotal = async (BillData) => {
 };
 
 const getBillTotal = async () => {
+  callback();
   const response = await axios.get(`${HOST}/billtotal/${AUTHKEY}`);
   const data = await response.data;
 };
 
 const MonthlyProfit = async () => {
+  callback();
   var start = new Date();
   start.setDate(start.getDate() - 30);
   let end = new Date(TodayDate);
@@ -271,23 +286,18 @@ const MonthlyProfit = async () => {
     var date = new Date(bill.date);
     return date >= start && date <= end;
   });
-  console.log(TodayBillData);
-  for (let i = 0; i < pid.length; i++) {
-    let prd = 0;
-    for (let j = 0; j < TodayBillData.length; j++) {
-      if (TodayBillData[j].product_id === pid[i]) {
-        prd += parseInt(TodayBillData[j].product_qty);
-      }
-    }
-    if (prd > 0) {
-      let pushData = { title: products[i], value: prd };
-      sales.push(pushData);
-    }
+  for (let i = 0; i < TodayBillData.length; i++) {
+    let pushData = { date: "", price: "" };
+    pushData.date = TodayBillData[i].date;
+    pushData.price = TodayBillData[i].total_price;
+    await sales.push(pushData);
   }
+  console.log(sales);
   return sales;
 };
 
 const RegisterUser = async (UserData) => {
+  // callback();
   await axios.post(`${HOST}/auth/register`, UserData).then(
     () => {
       toast.success("User Register Successfully");
@@ -306,7 +316,7 @@ function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-const LoginUser = async (UserData) => {
+const LoginUser = async (UserData, hide) => {
   await axios.post(`${HOST}/auth/login`, UserData).then(
     (res) => {
       if (res.data === "Not Logged...") {
@@ -316,9 +326,7 @@ const LoginUser = async (UserData) => {
         if (process.browser) {
           localStorage.setItem("authkey", res.data.authKey);
           localStorage.setItem("email", res.data.user);
-          sleep(3000).then(() => {
-            window.location.reload();
-          });
+          hide();
         }
       }
     },
@@ -329,6 +337,7 @@ const LoginUser = async (UserData) => {
 };
 
 const TodaySales = async () => {
+  callback();
   const res = await axios.get(`${HOST}/shop/billtotal/${AUTHKEY}/`);
   const data = res.data;
   const TodayData = await data.filter(
@@ -342,12 +351,14 @@ const TodaySales = async () => {
 };
 
 const SearchBillData = async (billno) => {
+  callback();
   const data = await getBillData();
   const Bill = await data.filter((bill) => bill.bill_number.includes(billno));
   return Bill;
 };
 
 const SearchBillTotal = async (billno) => {
+  callback();
   const res = await axios.get(`${HOST}/shop/billtotal/${AUTHKEY}/`);
   const data = res.data;
   const Bill = await data.filter((bill) => bill.bill_number.includes(billno));
@@ -356,9 +367,17 @@ const SearchBillTotal = async (billno) => {
 };
 
 const lowStock = async () => {
+  callback();
   const data = await getProducts();
   const lowStock = await data.filter((product) => product.product_qty < 5);
   return lowStock;
+};
+
+const filterBillbyDate = async (date) => {
+  callback();
+  const data = await axios.get(`${HOST}/shop/billtotal/${AUTHKEY}/`);
+  const bills = data.data;
+  return bills.filter((data) => data.date.includes(date));
 };
 
 export {
@@ -388,4 +407,5 @@ export {
   LoginUser,
   SearchBillTotal,
   lowStock,
+  filterBillbyDate,
 };

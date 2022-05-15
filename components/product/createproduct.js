@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { CreateProductData, SHOPEMAILID, TodayDate } from "../data/config";
 import { Toaster } from "react-hot-toast";
 
-export default function CreateProduct() {
+export default function CreateProduct(props) {
   const [productData, setProductData] = useState({
     shop_email: SHOPEMAILID,
     product_name: "",
@@ -14,33 +14,34 @@ export default function CreateProduct() {
   });
 
   const ChangeData = async () => {
-    await CreateProductData(productData);
+    await CreateProductData(productData, props.getreq);
+    await setProductData({
+      shop_email: SHOPEMAILID,
+      product_name: "",
+      date: TodayDate.toString(),
+      product_price: 0,
+      product_qty: 0,
+      product_gst: 0,
+      total_price: 0,
+    });
   };
 
   return (
-    <div className="grid grid-rows-4 gap-3 position-relative">
+    <div className="d-flex flex-column gap-2">
       <Toaster />
-      <h1 className="text-xl subpixel-antialiased italic font-semibold tracking-wide">
-        Create Product
-      </h1>
-      <label className="block">
-        <span className="after:content-['*'] after:ml-0.5 after:text-red-500 block text-sm font-medium text-slate-700">
-          Product Name
-        </span>
+      <h1 className="text-primary h5">Create Product</h1>
+      <div className="form-floating mb-3">
         <input
           type="text"
           onChange={(e) =>
             setProductData({ ...productData, product_name: e.target.value })
           }
-          className="mt-1 px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1"
+          className="form-control"
           value={productData.product_name}
-          placeholder="Product Name"
         />
-      </label>
-      <label className="block">
-        <span className="after:content-['*'] after:ml-0.5 after:text-red-500 block text-sm font-medium text-slate-700">
-          Quantity
-        </span>
+        <label for="floatingInput">Product Name</label>
+      </div>
+      <div className="form-floating mb-3">
         <input
           type="number"
           onChange={(e) =>
@@ -51,15 +52,12 @@ export default function CreateProduct() {
                 parseInt(e.target.value) * parseInt(productData.product_price),
             })
           }
-          className="mt-1 px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1"
+          className="form-control"
           value={productData.product_qty}
-          placeholder="Quantity"
         />
-      </label>
-      <label className="block">
-        <span className="after:content-['*'] after:ml-0.5 after:text-red-500 block text-sm font-medium text-slate-700">
-          GST
-        </span>
+        <label for="floatingInput">Quantity</label>
+      </div>
+      <div className="form-floating mb-3">
         <input
           type="number"
           onChange={(e) =>
@@ -68,18 +66,15 @@ export default function CreateProduct() {
               product_gst: parseInt(e.target.value),
             })
           }
-          className="mt-1 px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1"
+          className="form-control"
           value={productData.product_gst}
-          placeholder="GST"
         />
-      </label>
-      <label className="block">
-        <span className="after:content-['*'] after:ml-0.5 after:text-red-500 block text-sm font-medium text-slate-700">
-          Unit Price
-        </span>
+        <label for="floatingInput">GST</label>
+      </div>
+      <div className="form-floating mb-3">
         <input
           type="number"
-          className="mt-1 px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1"
+          className="form-control"
           onChange={(e) =>
             setProductData({
               ...productData,
@@ -89,17 +84,13 @@ export default function CreateProduct() {
             })
           }
           value={productData.product_price}
-          placeholder="Price"
         />
-      </label>
-      <label className="block">
-        <span className="after:content-['*'] after:ml-0.5 after:text-red-500 block text-sm font-medium text-slate-700">
-          Total Price
-        </span>
-
+        <label for="floatingInput">Price</label>
+      </div>
+      <div className="form-floating mb-3">
         <input
           type="number"
-          className="mt-1 px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1"
+          className="form-control"
           onChange={(e) =>
             setProductData({
               ...productData,
@@ -107,14 +98,11 @@ export default function CreateProduct() {
             })
           }
           value={productData.total_price}
-          placeholder="Total"
         />
-      </label>
+        <label for="floatingInput">Total</label>
+      </div>
 
-      <button
-        onClick={ChangeData}
-        className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-      >
+      <button onClick={ChangeData} className="btn btn-outline-primary">
         Save
       </button>
     </div>

@@ -4,71 +4,70 @@ import Image from 'next/image';
 import ChayaTimeLogo from '../../assests/download.png';
 import { LoginUser } from '../../components/data/config';
 import Register from '../../components/register/register';
-export default function Login() {
+
+export default function Login(props) {
 	const [registerData, setRegisterData] = useState({
 		email: '',
 		password: '',
 	});
 	const [registershow, setRegistershow] = useState(true);
+	const [loading, setLoading] = useState(false);
 	const Register_Function = async () => {
-		await LoginUser(registerData);
+		await setLoading(true);
+		await LoginUser(registerData, props.authcheck);
+		await setLoading(false);
 	};
+
+	function hideRegister() {
+		setRegistershow(true);
+	}
+
 	return (
-		<div>
+		<>
 			<Toaster />
 			{registershow === true && (
-				<div className='flex gap-3 items-center justify-evenly w-[100vw] flex-wrap'>
+				<div
+					className='d-flex justify-content-evenly flex-row align-items-center gap-3 '
+					style={{ width: '100vw' }}>
 					<Image src={ChayaTimeLogo} alt='Logo' />
-					<div className='mt-8 space-y-6 w-[200px]'>
-						<span className='block text-xl font-medium text-slate-700'>
-							Register
-						</span>
-						<label className='block'>
-							<span className='block mb-2 text-sm font-medium text-gray-900 '>
-								Email
-							</span>
-							<input
-								onChange={(e) =>
-									setRegisterData({
-										...registerData,
-										email: e.target.value,
-									})
-								}
-								type='email'
-								className='shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light'
-								placeholder='Email Address'
-							/>
-						</label>
-						<label className='block'>
-							<span className='block mb-2 text-sm font-medium text-gray-900'>
-								Password
-							</span>
-							<input
-								onChange={(e) =>
-									setRegisterData({
-										...registerData,
-										password: e.target.value,
-									})
-								}
-								type='password'
-								className='shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light'
-								placeholder='Shop Name'
-							/>
-						</label>
+					<div className='mt-4 d-flex flex-column gap-3 h-50'>
+						<input
+							onChange={(e) =>
+								setRegisterData({
+									...registerData,
+									email: e.target.value,
+								})
+							}
+							type='email'
+							className='form-control'
+							placeholder='Email Address'
+						/>
+						<input
+							onChange={(e) =>
+								setRegisterData({
+									...registerData,
+									password: e.target.value,
+								})
+							}
+							type='password'
+							className='form-control'
+							placeholder='Shop Name'
+						/>
+
 						<button
-							className='text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 m-[3px]'
+							className='border border-primary rounded bg-light text-primary p-2'
 							onClick={Register_Function}>
-							Login
+							{loading === true ? 'Loading' : 'Login'}
 						</button>
 						<button
-							className='text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 m-[3px]'
+							className='btn btn-primary'
 							onClick={() => setRegistershow(false)}>
 							Register
 						</button>
 					</div>
 				</div>
 			)}
-			{registershow === false && <Register />}
-		</div>
+			{registershow === false && <Register hidefnc={hideRegister} />}
+		</>
 	);
 }
