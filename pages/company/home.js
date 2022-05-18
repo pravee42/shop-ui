@@ -75,23 +75,23 @@ export default function Home() {
 						<div className='d-flex flex-row w-100 gap-4'>
 							<div className='d-flex flex-row gap-2 border p-2 rounded w-100'>
 								<p className='h6'>Total Sales:</p>
-								<p classname='badge bg-secondary text-dark'>{SalesData}</p>
+								<p className='badge bg-secondary text-dark'>{SalesData}</p>
 							</div>
 							<div className='d-flex flex-row gap-2 border p-2 rounded w-100'>
 								<p className='h6'>Yesterday Sales Total:</p>
-								<p classname='badge bg-secondary text-dark'>{YesterdaySales}</p>
+								<p className='badge bg-secondary text-dark'>{YesterdaySales}</p>
 							</div>
 						</div>
 						<div className='d-flex flex-row w-100 gap-4 mt-4'>
 							<div className='d-flex flex-row gap-2 border p-2 rounded w-100'>
 								<p className='h6'>Today Service Total:</p>
-								<p classname='badge bg-secondary text-dark'>
+								<p className='badge bg-secondary text-dark'>
 									{TodayServiceData1}
 								</p>
 							</div>
 							<div className='d-flex flex-row gap-2 border p-2 rounded w-100'>
 								<p className='h6'>Today Sales:</p>
-								<p classname='badge bg-secondary text-dark'>
+								<p className='badge bg-secondary text-dark'>
 									{TodaySalesTotal}
 								</p>
 							</div>

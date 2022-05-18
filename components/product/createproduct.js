@@ -39,7 +39,7 @@ export default function CreateProduct(props) {
           className="form-control"
           value={productData.product_name}
         />
-        <label for="floatingInput">Product Name</label>
+        <label htmlFor="floatingInput">Product Name</label>
       </div>
       <div className="form-floating mb-3">
         <input
@@ -55,7 +55,7 @@ export default function CreateProduct(props) {
           className="form-control"
           value={productData.product_qty}
         />
-        <label for="floatingInput">Quantity</label>
+        <label htmlFor="floatingInput">Quantity</label>
       </div>
       <div className="form-floating mb-3">
         <input
@@ -69,7 +69,7 @@ export default function CreateProduct(props) {
           className="form-control"
           value={productData.product_gst}
         />
-        <label for="floatingInput">GST</label>
+        <label htmlFor="floatingInput">GST</label>
       </div>
       <div className="form-floating mb-3">
         <input
@@ -85,7 +85,7 @@ export default function CreateProduct(props) {
           }
           value={productData.product_price}
         />
-        <label for="floatingInput">Price</label>
+        <label htmlFor="floatingInput">Price</label>
       </div>
       <div className="form-floating mb-3">
         <input
@@ -99,7 +99,7 @@ export default function CreateProduct(props) {
           }
           value={productData.total_price}
         />
-        <label for="floatingInput">Total</label>
+        <label htmlFor="floatingInput">Total</label>
       </div>
 
       <button onClick={ChangeData} className="btn btn-outline-primary">

@@ -1,10 +1,8 @@
 import React, { useState, useContext } from "react";
 import Link from "next/link";
-import { Authcontext } from "../components/context";
 
 export default function NavBar(props) {
   const [open, setOpen] = useState(false);
-  const { AUTHKEY, findAuth } = useContext(Authcontext);
 
   const changeOpen = () => {
     setOpen(!open);
