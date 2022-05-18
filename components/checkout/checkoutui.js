@@ -8,6 +8,7 @@ export default class CheckOutPrint extends React.Component {
     super(props);
     this.state = {};
   }
+
   render() {
     return (
       <div className="d-flex flex-column justify-content-center align-items-center">

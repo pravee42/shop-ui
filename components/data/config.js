@@ -246,7 +246,6 @@ const FilterBill = async () => {
   const Bill = await data.filter((bill) =>
     bill.bill_number.includes(BillNumber1)
   );
-  // await console.log(Bill);
   return Bill;
 };
 
@@ -287,13 +286,42 @@ const MonthlyProfit = async () => {
     return date >= start && date <= end;
   });
   for (let i = 0; i < TodayBillData.length; i++) {
-    let pushData = { date: "", price: "" };
-    pushData.date = TodayBillData[i].date;
-    pushData.price = TodayBillData[i].total_price;
+    let pushData = {
+      date: TodayBillData[i].date,
+      price: TodayBillData[i].total_price,
+    };
     await sales.push(pushData);
   }
-  console.log(sales);
-  return sales;
+
+  let dateSales = [];
+  var salesLength;
+  salesLength = sales.length;
+  let salesIncrementor = 0;
+
+  for (salesIncrementor; salesIncrementor < salesLength; salesIncrementor++) {
+    let date_sales = [];
+    for (let j = 0; j < sales.length; j++) {
+      if (
+        sales[salesIncrementor].date.toString() === sales[j].date.toString()
+      ) {
+        await date_sales.push(sales[j]);
+      }
+    }
+    if (date_sales.length > 0) {
+      let sum = 0;
+      for (let x = 0; x < date_sales.length; x++) {
+        sum += date_sales[x].price;
+      }
+      let onjj = { date: date_sales[0].date, price: sum };
+      await dateSales.push(onjj);
+      sales = await sales.filter(
+        (data) => !data.date.includes(date_sales[0].date)
+      );
+
+      salesIncrementor = 0;
+    }
+  }
+  return dateSales;
 };
 
 const RegisterUser = async (UserData) => {
@@ -362,7 +390,6 @@ const SearchBillTotal = async (billno) => {
   const res = await axios.get(`${HOST}/shop/billtotal/${AUTHKEY}/`);
   const data = res.data;
   const Bill = await data.filter((bill) => bill.bill_number.includes(billno));
-  await console.log(Bill);
   return Bill;
 };
 
@@ -373,11 +400,12 @@ const lowStock = async () => {
   return lowStock;
 };
 
-const filterBillbyDate = async (date) => {
+const filterBillbyDate = async (date1) => {
   callback();
-  const data = await axios.get(`${HOST}/shop/billtotal/${AUTHKEY}/`);
-  const bills = data.data;
-  return bills.filter((data) => data.date.includes(date));
+  const response = await axios.get(`${HOST}/shop/billtotal/${AUTHKEY}/`);
+  const bills = response.data;
+  const Bill = await bills.filter((billsdata) => billsdata.date.includes(date1));
+  return Bill
 };
 
 export {

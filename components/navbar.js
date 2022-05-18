@@ -44,7 +44,7 @@ export default function NavBar(props) {
                 window.location.href = "/";
               }
             }}
-            className="text"
+            className="btn btn-primary"
           >
             Log out
           </button>
@@ -88,7 +88,7 @@ export default function NavBar(props) {
                     findAuth();
                   }
                 }}
-                className="text"
+                className="btn btn-primary"
               >
                 Log out
               </button>
